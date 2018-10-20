@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  ubuntu:
+    container_name: ruby-starter-kit
+    build: .
+    volumes:
+      - ${PWD}:/opt/ruby-starter-kit
+    tty: true
