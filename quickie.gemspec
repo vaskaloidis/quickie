@@ -16,9 +16,9 @@ Gem::Specification.new do |spec|
   spec.email             = "vaspec.kaloidis@gmail.com"
   spec.authors           = [ "vaskaloidis" ]
   spec.has_rdoc          = false
-  spec.files             = `git ls-files -z`.split("x0")
+  spec.files         = `git ls-files -z`.split("\x0")
   spec.bindir            = "exe"
-  spec.executables       = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }  
+  spec.executables       = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.test_files        = spec.files.grep(%r{^(spec)/})
   spec.license           = "MIT"
 
