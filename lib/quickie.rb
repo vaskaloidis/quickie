@@ -9,16 +9,15 @@ class Quickie < Thor
     File.dirname(__FILE__)
   end
 
-  desc "bash NAME", "Generate a BASH app-skeleton"
+    desc "bash NAME", "Generate a quick BASH app-skeleton"
   def bash(name)
-    empty_directory("#{name}")
-    copy_file('lib/quickie/templates/bash.sh.tt', "#{name}/#{name}.sh")
+    copy_file('lib/quickie/templates/bash-quick.sh.tt', "#{name}.sh") # TODO: Rename bash-quick
   end
 
-    desc "bash-quick NAME", "Generate a quick BASH app-skeleton"
-  def bash(name)
+  desc "bash_lg NAME", "Generate a BASH app-skeleton"
+  def bash_lg(name)
     empty_directory("#{name}")
-    copy_file('lib/quickie/templates/bash-quick.sh.tt', "#{name}/#{name}.sh")
+    copy_file('lib/quickie/templates/bash.sh.tt', "#{name}/#{name}.sh") #TODO: Rename bash to bash_lg
   end
 
   desc "ruby NAME", "Generate a Ruby app-skeleton"
