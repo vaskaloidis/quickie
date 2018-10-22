@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require "quickie"
+
+
+Quickie.start(ARGV)
