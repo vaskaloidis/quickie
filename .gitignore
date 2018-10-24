@@ -21,3 +21,4 @@
 /coverage
 npm-debug.log
 .bash_history
+pkg/*
