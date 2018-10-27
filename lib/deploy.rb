@@ -1,0 +1,6 @@
+class Deploy < Thor
+
+
+
+
+end
