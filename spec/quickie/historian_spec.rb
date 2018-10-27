@@ -1,5 +1,4 @@
 
-
 Rspec.describe Historian do
 
   describe 'bash shell-type' do

@@ -6,11 +6,24 @@ require 'tmpdir' # Not needed if you are using rails.
 
 class Quickie < Thor
   include Thor::Actions
-
   SUPPORTED_LANGUAGES = %w[BASH, Ruby].freeze
 
   def self.source_root
     File.dirname(__FILE__)
+  end
+
+  desc "editor", "Prints the editor in use"
+  def editor
+    value = `echo $EDITOR`.sub('\n', '').strip!
+    if value && !value.nil? && value.split != ''
+      program = value
+    else
+      program = 'vim'
+    end
+    puts 'Editor: ' + program
+    app = `which #{program}`
+    puts app
+    system(app, 'Gemfile')
   end
 
   # TODO: CLI Templates https://github.com/tongueroo/cli-template
@@ -26,35 +39,35 @@ class Quickie < Thor
 
     copy_file('./quickie/templates/bash-quick.sh.tt', "#{name}.sh")
 
-    `subl #{name}.sh`
+    `#{editor} #{name}.sh`
   end
 
   desc "ruby NAME", "Generate a Ruby app-skeleton"
 
   def ruby(name)
     directory('./quickie/templates/ruby', "#{name}")
-    `subl #{name}`
+    `#{editor} #{name}`
   end
 
   desc "gem NAME", "Generate a gem bundle"
 
   def gem(name)
     `bundle gem --test=rspec --bin #{name}`
-    `subl #{name}`
+    `#{editor} #{name}`
   end
 
   desc "sinatra NAME", "Generate a regular Sinatra app-skeleton"
 
   def sinatra(name)
     directory('./quickie/templates/sinatra', "#{name}")
-    `subl #{name}`
+    `#{editor} #{name}`
   end
 
   desc "command NAME", "Generate new quickie Command"
 
   def command(name)
     directory('./quickie/templates/sinatra', "#{name}")
-    `subl ~/Code/Ruby/quickie/`
+    `#{editor} ~/Code/Ruby/quickie/`
   end
 
   # CLI Helper + Utils
