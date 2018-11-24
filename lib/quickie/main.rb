@@ -1,17 +1,35 @@
 require "thor"
 require 'tmpdir'
 
+require_relative 'quickie_type'
+require_relative 'types/bash'
+
 module Quickie
   class Main < Thor
     include Thor::Actions
-    include Quickie::Util
+    include Util
+    include Bash
 
     SUPPORTED_LANGUAGES = %w[BASH, Ruby].freeze
     ADD_GEMS = false
 
+    method_option :subl, :aliases => "-s", :desc => "Opens the editor in Sublime Text"
+    method_option :vim, :aliases => "-v", :desc => "Opens the editor in Vim"
+    method_option :edit, :aliases => "-e", :desc => "Opens the editor in Default Editor"
+
+    def launch_editor
+      open_editor name if options[:edit]
+      open_editor 'subl', name if options[:subl]
+      open_editor 'vim', name if options[:vim]
+    end
+
 
     def self.source_root
       File.dirname(__FILE__)
+    end
+
+    def self.destination_root
+      File.pwd
     end
 
     desc "editor", "Prints the editor in use"
@@ -26,7 +44,8 @@ module Quickie
       `export EDITOR='#{program}'`
     end
 
-    desc "bash NAME", "Generate a quick BASH app-skeleton"
+    desc "bash NAME", "Generate a simple BASH app-skeleton"
+    method_option :cheatsheet, :aliases => "-c", :desc => "Open the DevHints Cheatsheet also"
 
     def bash(name)
       name += ".sh" unless name.end_with? '.sh'
@@ -35,10 +54,39 @@ module Quickie
       @user = `whoami`
       # @email = gitemail
 
-      copy_file('./templates/bash-quick.sh.tt', "#{name}")
+      bash = Bash.new(name)
 
-      open_editor name
+        bash.starters('bash-basic.sh')
+
+      launch_editor
     end
+
+    desc "bash-cli NAME", "Generate a simple BASH CLI app-skeleton"
+
+    def bash_cli(name)
+      name += ".sh" unless name.end_with? '.sh'
+      @name = name
+      @date = current_time
+      @user = `whoami`
+      # @email = gitemail
+
+      bash = Bash.new(name)
+      bash.starters('bash-cli.sh')
+    end
+
+    desc "bash-advanced NAME", "Generate an advanced BASH app-skeleton"
+
+    def bash_advanced(name)
+      name += ".sh" unless name.end_with? '.sh'
+      @name = name
+      @date = current_time
+      @user = `whoami`
+      # @email = gitemail
+
+      bash = Bash.new(name)
+      bash.starters('bash-detailed-starter.sh')
+    end
+
 
     desc "ruby NAME", "Generate a Ruby app-skeleton"
 
@@ -77,6 +125,11 @@ module Quickie
       directory('./templates/quickie_command', "#{name}")
       open_editor '~/Code/Ruby/quickie/'
     end
+
+    desc "docker-vagrant", "Builds a docker Vagrant template with Boiler"
+    def docker_vagrant
+      install_boiler unless boiler_installed?
+    end 
 
 
     # CLI Helper + Utils
